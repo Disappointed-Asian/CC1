@@ -37,10 +37,11 @@ public class DecimalBinary{
 			System.out.println("Output: " + binary);
         	}
         	catch(NumberFormatException e){
-        	System.out.println(ColoredText.GREEN + "Di ka lang mahal! Aray ko!");
+        	System.out.println("Di ka lang mahal! Aray ko!");
         	}
 		
 		}
 		scanner.close(); 
 	}
 }
+
