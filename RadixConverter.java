@@ -1,7 +1,15 @@
+package com.mycompany.mavenproject17;
+
+/**
+ *
+ * @author M304User
+ */
+
 import java.util.List;
 import java.util.Scanner;
 
 public class RadixConverter {
+
     public static void main(String[] args) {
     Scanner scanner = new Scanner(System.in);
         //List of valid base numbers
@@ -17,6 +25,7 @@ public class RadixConverter {
             //checks if base is valid
             else if (!baseNumbers.contains(origBase)) {
                 System.out.println("Please type a number between 2 to 16");
+                continue;
             }
 
             //Asks user for number within a base
@@ -135,4 +144,3 @@ public class RadixConverter {
             return finalAnswer; 
     }
 }
-
