@@ -1,3 +1,11 @@
+
+package com.mycompany.mavenproject17;
+
+/**
+ *
+ * @author M304User
+ */
+
 import java.util.Scanner;
 
 public class DecimalBinary{
@@ -6,8 +14,8 @@ public class DecimalBinary{
 		Scanner scanner = new Scanner(System.in);
 		
 		while (true){
-			//Ask for user input
-        	System.out.println("Type a number:");
+                //Ask for user input
+        	System.out.print("\nType a number: ");
         	String decimal = scanner.nextLine();
 
         	//Exits loop after typing STOP
@@ -37,7 +45,7 @@ public class DecimalBinary{
 			System.out.println("Output: " + binary);
         	}
         	catch(NumberFormatException e){
-        	System.out.println("Di ka lang mahal! Aray ko!");
+        	System.out.println("Please write a number.");
         	}
 		
 		}
