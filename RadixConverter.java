@@ -36,10 +36,10 @@ public class RadixConverter {
             }
 
             //Convert number to any radix
-            int decimalNumber =  DecimalNumberConverter(number, origBase);
+            int decimalNumber =  decimalNumberConverter(number, origBase);
             int baseNumber = 2;
             while (baseNumber <= 16){
-                String finalAnswer = RadixNumberConverter(decimalNumber, baseNumber);
+                String finalAnswer = radixNumberConverter(decimalNumber, baseNumber);
                 System.out.println("Base " + baseNumber + ": " + finalAnswer);
                 baseNumber++;
             }
@@ -69,7 +69,7 @@ public class RadixConverter {
         return true;
     }
 
-    public static int DecimalNumberConverter(String number, String origBase){
+    public static int decimalNumberConverter(String number, String origBase){
         ///Converts any radix to a decimal number
         int decimalNumber = 0;
         int digitConv;
@@ -103,7 +103,7 @@ public class RadixConverter {
         return decimalNumber;
     }
 
-    public static String RadixNumberConverter(int decimalNumber, int baseNumber){
+    public static String radixNumberConverter(int decimalNumber, int baseNumber){
         //Converts decimal number to any radix
         int x = baseNumber;
         String finalAnswer = "";
@@ -135,3 +135,4 @@ public class RadixConverter {
             return finalAnswer; 
     }
 }
+
