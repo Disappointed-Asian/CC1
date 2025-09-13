@@ -1,11 +1,7 @@
-//package com.mycompany.mavenproject17;
-//##Add and change mavenproject17 just in case it doesn't work on netbeans
-
 import java.util.List;
 import java.util.Scanner;
 
-public class RadixConverter {
-
+public class RadixConverterV1 {
     public static void main(String[] args) {
     Scanner scanner = new Scanner(System.in);
         //List of valid base numbers
@@ -13,7 +9,7 @@ public class RadixConverter {
 
         while (true) {
             //Asks user for base 
-            System.out.print("\n\nType a base: ");
+            System.out.print("\n\nType the base: ");
             String origBase = scanner.nextLine();
             if (checkForStop(origBase) == true){
                 break;
@@ -21,7 +17,6 @@ public class RadixConverter {
             //checks if base is valid
             else if (!baseNumbers.contains(origBase)) {
                 System.out.println("Please type a number between 2 to 16");
-                continue;
             }
 
             //Asks user for number within a base
@@ -30,6 +25,13 @@ public class RadixConverter {
             if (checkForStop(number) == true){
                 break;
             }
+            //checks for zero
+            if (number.equalsIgnoreCase("0")) {
+				for(int i=2; i < 17; i++){
+                    System.out.println("Base " + i + ": 0");
+                }
+				continue;
+			}
             //Return to selecting base
             else if(number.equalsIgnoreCase("BASE")){
             }
@@ -41,10 +43,10 @@ public class RadixConverter {
             }
 
             //Convert number to any radix
-            int decimalNumber =  decimalNumberConverter(number, origBase);
+            int decimalNumber =  DecimalNumberConverter(number, origBase);
             int baseNumber = 2;
             while (baseNumber <= 16){
-                String finalAnswer = radixNumberConverter(decimalNumber, baseNumber);
+                String finalAnswer = RadixNumberConverter(decimalNumber, baseNumber);
                 System.out.println("Base " + baseNumber + ": " + finalAnswer);
                 baseNumber++;
             }
@@ -74,7 +76,8 @@ public class RadixConverter {
         return true;
     }
 
-    public static int decimalNumberConverter(String number, String origBase){
+
+    public static int DecimalNumberConverter(String number, String origBase){
         ///Converts any radix to a decimal number
         int decimalNumber = 0;
         int digitConv;
@@ -108,7 +111,7 @@ public class RadixConverter {
         return decimalNumber;
     }
 
-    public static String radixNumberConverter(int decimalNumber, int baseNumber){
+    public static String RadixNumberConverter(int decimalNumber, int baseNumber){
         //Converts decimal number to any radix
         int x = baseNumber;
         String finalAnswer = "";
@@ -140,4 +143,3 @@ public class RadixConverter {
             return finalAnswer; 
     }
 }
-
