@@ -1,32 +1,32 @@
-
-package com.mycompany.mavenproject17;
-
-/**
- *
- * @author M304User
- */
-
 import java.util.Scanner;
 
 public class DecimalBinary{
 	public static void main(String[] arg){
 
 		Scanner scanner = new Scanner(System.in);
-		
-		while (true){
-                //Ask for user input
-        	System.out.print("\nType a number: ");
-        	String decimal = scanner.nextLine();
 
-        	//Exits loop after typing STOP
-        	if (decimal.equalsIgnoreCase("STOP")) {
-        		break;
+		while (true){
+			//Ask for user input
+			System.out.print("\n\nType a number:");
+			String decimal = scanner.nextLine();
+
+			//Exits loop after typing STOP
+			if (decimal.equalsIgnoreCase("STOP")) {
+				break;
 			}
-                
+			if (!isValidNumberForBase(decimal, 10)) {
+                System.out.println("Please enter a number.");
+                continue;
+            }
+			if (decimal.equalsIgnoreCase("0")) {
+				System.out.println("Input: 0");
+				System.out.println("Output: 0");
+				continue;
+			}
+
 			//converts string to int
-        	try {
-				int input = Integer.parseInt(decimal);
-        		String binary = "";
+			int input = Integer.parseInt(decimal);
+			String binary = "";
 
 			//converts decimal to binary
 			while (input>0) {
@@ -37,19 +37,26 @@ public class DecimalBinary{
 				else if(input%2 ==1) {
 					binary = "1" + binary;
 					input = input/2;
-                    	}
 				}
+			}
 
 			//Prints the result
 			System.out.println("Input: " + decimal);
 			System.out.println("Output: " + binary);
-        	}
-        	catch(NumberFormatException e){
-        	System.out.println("Please write a number.");
-        	}
-		
 		}
 		scanner.close(); 
 	}
-}
+	    public static boolean isValidNumberForBase(String number, int base) {
+        //Checks if user inputs a valid number after choosing a base
+        String validDigits = "0123456789";
+        number = number.toUpperCase();
 
+        for (char digit : number.toCharArray()) {
+            int digitValue = validDigits.indexOf(digit);
+            if (digitValue == -1 || digitValue >= base) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
