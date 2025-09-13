@@ -1,9 +1,5 @@
-package com.mycompany.mavenproject17;
-
-/**
- *
- * @author M304User
- */
+//package com.mycompany.mavenproject17;
+//##Add and change mavenproject17 just in case it doesn't work on netbeans
 
 import java.util.List;
 import java.util.Scanner;
@@ -144,3 +140,4 @@ public class RadixConverter {
             return finalAnswer; 
     }
 }
+
