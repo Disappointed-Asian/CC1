@@ -1,0 +1,87 @@
+package com.mycompany.radixnikyro;
+import java.util.List;
+import java.util.Scanner;
+
+public class RadixniKyro {
+
+    private static final List<String> VALID_BASES =
+            List.of("2","3","4","5","6","7","8","9","10","11","12","13","14","15","16");
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            // --- Ask for source base ---
+            System.out.print("\nEnter the base (2–16) or STOP: ");
+            String baseInput = scanner.nextLine().trim();
+            if (isStop(baseInput)) break;
+
+            if (!VALID_BASES.contains(baseInput)) {
+                System.out.println("Invalid base. Please type a number between 2 and 16.");
+                continue;
+            }
+            int base = Integer.parseInt(baseInput);
+
+            // --- Ask for number in that base ---
+            System.out.print("Enter a number in base " + base + " (or STOP): ");
+            String number = scanner.nextLine().trim();
+            if (isStop(number)) break;
+
+            if (number.equalsIgnoreCase("0")) {
+                // Print zero in all bases
+                for (int b = 2; b <= 16; b++) {
+                    System.out.println("Base " + b + ": 0");
+                }
+                continue;
+            }
+
+            if (!isValidForBase(number, base)) {
+                System.out.println("Invalid number for base " + base + ".");
+                continue;
+            }
+
+            // --- Convert to decimal ---
+            int decimalValue = toDecimal(number, base);
+
+            // --- Convert decimal to every base 2–16 ---
+            for (int targetBase = 2; targetBase <= 16; targetBase++) {
+                System.out.println("Base " + targetBase + ": " + fromDecimal(decimalValue, targetBase));
+            }
+        }
+        scanner.close();
+    }
+
+    private static boolean isStop(String text) {
+        return text.equalsIgnoreCase("STOP");
+    }
+
+    // Check that all digits are valid for the given base
+    private static boolean isValidForBase(String number, int base) {
+        for (char c : number.toUpperCase().toCharArray()) {
+            if (Character.digit(c, base) == -1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Convert any base-N number to decimal
+    private static int toDecimal(String number, int base) {
+        int value = 0;
+        for (char c : number.toUpperCase().toCharArray()) {
+            value = value * base + Character.digit(c, base);
+        }
+        return value;
+    }
+
+    // Convert a decimal number to a string in the target base
+    private static String fromDecimal(int decimal, int base) {
+        StringBuilder sb = new StringBuilder();
+        int num = decimal;
+        while (num > 0) {
+            sb.insert(0,Character.toUpperCase(Character.forDigit(num % base, base)));
+            num /= base;
+        }
+        return sb.toString();
+    }
+}
