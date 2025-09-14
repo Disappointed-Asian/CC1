@@ -12,7 +12,7 @@ public class RadixniKyro {
 
         while (true) {
             // --- Ask for source base ---
-            System.out.print("\nEnter the base (2–16) or STOP: ");
+            System.out.print("\nEnter the base (2 – 16) or STOP: ");
             String baseInput = scanner.nextLine().trim();
             if (isStop(baseInput)) break;
 
