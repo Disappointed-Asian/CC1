@@ -1,0 +1,61 @@
+package com.mycompany.decimalnikyro;
+import java.util.Scanner;
+
+public class DecimalniKyro {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.print("\nType a number (or STOP to end): ");
+            String inputStr = scanner.nextLine().trim();
+
+            // Exit if user types STOP
+            if (inputStr.equalsIgnoreCase("STOP")) {
+                break;
+            }
+
+            // Validate input is a decimal number
+            if (!isValidDecimal(inputStr)) {
+                System.out.println("Please enter a valid number.");
+                continue;
+            }
+
+            int decimal = Integer.parseInt(inputStr);
+
+            // Special case: zero
+            if (decimal == 0) {
+                System.out.println("Input: 0");
+                System.out.println("Output: 0");
+                continue;
+            }
+
+            // Convert and display result
+            String binary = decimalToBinary(decimal);
+            System.out.println("Input: " + decimal);
+            System.out.println("Output: " + binary);
+        }
+
+        scanner.close();
+    }
+
+    // Check if the string contains only decimal digits
+    private static boolean isValidDecimal(String number) {
+        for (char c : number.toCharArray()) {
+            if (!Character.isDigit(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Convert decimal integer to binary string
+    private static String decimalToBinary(int num) {
+        StringBuilder binary = new StringBuilder();
+        while (num > 0) {
+            binary.insert(0, num % 2);
+            num /= 2;
+        }
+        return binary.toString();
+    }
+}
