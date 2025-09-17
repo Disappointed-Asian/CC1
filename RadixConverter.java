@@ -1,10 +1,10 @@
-package com.mycompany.bidec;
+// package com.mycompany.bidec;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class BiDec {
+public class RadixConverter {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         // List of valid base numbers
@@ -14,7 +14,7 @@ public class BiDec {
 
         while (true) {
             // Ask user for base
-            System.out.print("\nEnter the base (2-16) or type 'STOP' to exit: ");
+            System.out.print("\nEnter the base or type 'STOP' to exit: ");
             String origBase = scanner.nextLine();
             if (checkForStop(origBase)) {
                 break;  // Break the loop if user types "STOP"
@@ -43,20 +43,30 @@ public class BiDec {
             // Convert number to decimal
             int decimalNumber = DecimalNumberConverter(number, origBase);
 
-            // Convert to Binary, Octal, Decimal, and Hexadecimal
-            String binary = RadixNumberConverter(decimalNumber, 2);
-            String octal = RadixNumberConverter(decimalNumber, 8);
-            String hexadecimal = RadixNumberConverter(decimalNumber, 16);
+            // Prepare result list dynamically (skipping the input base representation)
+            List<String> row = new ArrayList<>();
+            row.add(number); // Always add the original input
 
-            // Store the results in the list
-            results.add(new String[] { number, binary, octal, String.valueOf(decimalNumber), hexadecimal });
+            if (base != 2) row.add(RadixNumberConverter(decimalNumber, 2));
+            if (base != 8) row.add(RadixNumberConverter(decimalNumber, 8));
+            if (base != 10) row.add("" + decimalNumber);
+            if (base != 16) row.add(RadixNumberConverter(decimalNumber, 16));
+
+            results.add(row.toArray(new String[0]));
         }
 
         // After STOP, print all the results collected
-        System.out.println("\nConversion Results:");
-        System.out.printf("%-15s%-15s%-15s%-15s%-15s\n", "Input", "Binary", "Octal", "Decimal", "Hexadecimal");
+        System.out.printf("%-25s%-25s%-25s%-25s\n", "Input", "Output1", "Output2", "Output3");
         for (String[] result : results) {
-            System.out.printf("%-15s%-15s%-15s%-15s%-15s\n", result[0], result[1], result[2], result[3], result[4]);
+            // Print only up to 4 columns (input + 3 outputs max)
+            for (int i = 0; i < 4; i++) {
+                if (i < result.length) {
+                    System.out.printf("%-25s", result[i]);
+                } else {
+                    System.out.printf("%-25s", ""); // Empty if fewer outputs
+                }
+            }
+            System.out.println();
         }
 
         // Close the scanner
@@ -64,12 +74,10 @@ public class BiDec {
     }
 
     public static boolean checkForStop(String userType) {
-        // Checks if user typed stop
         return userType.equalsIgnoreCase("STOP");
     }
 
     public static boolean isValidNumberForBase(String number, int base) {
-        // Checks if user inputs a valid number for the chosen base
         String validDigits = "0123456789ABCDEF";
         number = number.toUpperCase();
 
@@ -83,55 +91,35 @@ public class BiDec {
     }
 
     public static int DecimalNumberConverter(String number, String origBase) {
-        // Converts any radix to a decimal number
         int decimalNumber = 0;
         int digitConv;
         int origBaseNumber = Integer.parseInt(origBase);
 
         for (int i = number.length() - 1, power = 0; i >= 0; i--, power++) {
             char currentDigit = number.charAt(i);
-            if (currentDigit == 'A') {
-                digitConv = (int) Math.pow(origBaseNumber, power) * 10;
-            } else if (currentDigit == 'B') {
-                digitConv = (int) Math.pow(origBaseNumber, power) * 11;
-            } else if (currentDigit == 'C') {
-                digitConv = (int) Math.pow(origBaseNumber, power) * 12;
-            } else if (currentDigit == 'D') {
-                digitConv = (int) Math.pow(origBaseNumber, power) * 13;
-            } else if (currentDigit == 'E') {
-                digitConv = (int) Math.pow(origBaseNumber, power) * 14;
-            } else if (currentDigit == 'F') {
-                digitConv = (int) Math.pow(origBaseNumber, power) * 15;
+            int value;
+            if (currentDigit >= 'A' && currentDigit <= 'F') {
+                value = 10 + (currentDigit - 'A');
             } else {
-                digitConv = (int) Math.pow(origBaseNumber, power) * Character.getNumericValue(currentDigit);
+                value = Character.getNumericValue(currentDigit);
             }
-            decimalNumber = decimalNumber + digitConv;
+            digitConv = (int) Math.pow(origBaseNumber, power) * value;
+            decimalNumber += digitConv;
         }
         return decimalNumber;
     }
 
     public static String RadixNumberConverter(int decimalNumber, int baseNumber) {
-        // Converts decimal number to any radix
-        int x = baseNumber;
+        if (decimalNumber == 0) return "0";
         String finalAnswer = "";
         while (decimalNumber > 0) {
-            int base = decimalNumber % x;
-            if (base == 10) {
-                finalAnswer = "A" + finalAnswer;
-            } else if (base == 11) {
-                finalAnswer = "B" + finalAnswer;
-            } else if (base == 12) {
-                finalAnswer = "C" + finalAnswer;
-            } else if (base == 13) {
-                finalAnswer = "D" + finalAnswer;
-            } else if (base == 14) {
-                finalAnswer = "E" + finalAnswer;
-            } else if (base == 15) {
-                finalAnswer = "F" + finalAnswer;
+            int remainder = decimalNumber % baseNumber;
+            if (remainder >= 10) {
+                finalAnswer = (char) ('A' + (remainder - 10)) + finalAnswer;
             } else {
-                finalAnswer = Integer.toString(base) + finalAnswer;
+                finalAnswer = remainder + finalAnswer;
             }
-            decimalNumber = decimalNumber / baseNumber;
+            decimalNumber /= baseNumber;
         }
         return finalAnswer;
     }
