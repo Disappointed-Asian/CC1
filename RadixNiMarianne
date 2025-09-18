@@ -1,0 +1,146 @@
+import java.util.*;
+
+public class Radix {
+
+    // --- check if Unicode subscripts are supported ---
+    static boolean unicodeSupported;
+    static {
+        String test = "₂";
+        // If the JVM/font cannot render, it will show as "?" or "�"
+        unicodeSupported = !(test.equals("?") || test.equals("�"));
+    }
+
+    // --- Conversion helpers ---
+    public static String convertIntegerPart(long number, int base) {
+        if (number == 0) return "0";
+        StringBuilder sb = new StringBuilder();
+        while (number > 0) {
+            int digit = (int) (number % base);
+            sb.insert(0, Character.forDigit(digit, base));
+            number /= base;
+        }
+        return sb.toString().toUpperCase();
+    }
+
+    public static String convertFractionalPart(double fraction, int base) {
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+        while (fraction > 0 && count < 12) { // up to 12 places
+            fraction *= base;
+            int digit = (int) fraction;
+            sb.append(Character.forDigit(digit, base));
+            fraction -= digit;
+            count++;
+        }
+        return sb.toString().toUpperCase();
+    }
+
+    public static String convertToBase(double value, int base) {
+        boolean isNegative = value < 0;
+        value = Math.abs(value);
+
+        long integerPart = (long) value;
+        double fractionalPart = value - integerPart;
+
+        String intStr = convertIntegerPart(integerPart, base);
+        String result = (fractionalPart == 0)
+                ? intStr
+                : intStr + "." + convertFractionalPart(fractionalPart, base);
+
+        return isNegative ? "-" + result : result;
+    }
+
+    // --- Universal parser ---
+    public static double parseInput(String input, int base) {
+        input = input.trim().toLowerCase();
+
+        // constants
+        if (input.equals("pi")) return Math.PI;
+        if (input.equals("e")) return Math.E;
+
+        // negative numbers
+        if (input.startsWith("-")) {
+            return -parseInput(input.substring(1), base);
+        }
+
+        // mixed fractions: "3 1/2"
+        if (input.contains(" ")) {
+            String[] parts = input.split(" ");
+            double whole = parseInput(parts[0], base);
+            double frac = parseInput(parts[1], base);
+            return whole + frac;
+        }
+
+        // fractions: "3/4"
+        if (input.contains("/")) {
+            String[] parts = input.split("/");
+            double numerator = parseInput(parts[0], base);
+            double denominator = parseInput(parts[1], base);
+            return numerator / denominator;
+        }
+
+        // sqrt and radical forms
+        if (input.startsWith("sqrt(") && input.endsWith(")")) {
+            String inner = input.substring(5, input.length() - 1);
+            return Math.sqrt(parseInput(inner, base));
+        }
+        if (input.startsWith("√")) {
+            String inner = input.substring(1);
+            return Math.sqrt(parseInput(inner, base));
+        }
+
+        // exponentiation: "2^8"
+        if (input.contains("^")) {
+            String[] parts = input.split("\\^");
+            double baseValue = parseInput(parts[0], base);
+            double exponent = parseInput(parts[1], base);
+            return Math.pow(baseValue, exponent);
+        }
+
+        // decimals in chosen base: "A.F"
+        if (input.contains(".")) {
+            String[] parts = input.split("\\.");
+            long intPart = Long.parseLong(parts[0], base);
+            double fracValue = 0.0;
+            String fracStr = parts[1].toUpperCase();
+            for (int i = 0; i < fracStr.length(); i++) {
+                int digit = Character.digit(fracStr.charAt(i), base);
+                if (digit < 0) throw new NumberFormatException("Invalid digit for base " + base);
+                fracValue += digit / Math.pow(base, i + 1);
+            }
+            return intPart + fracValue;
+        }
+
+        // plain integer
+        return Long.parseLong(input, base);
+    }
+
+    // --- Subscript or fallback ---
+    public static String baseSubscript(int base) {
+        if (unicodeSupported) {
+            switch (base) {
+                case 2: return "₂";
+                case 8: return "₈";
+                case 10: return "₁₀";
+                case 16: return "₁₆";
+                default: return "";
+            }
+        } else {
+            return "_" + base;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        List<String[]> results = new ArrayList<>();
+
+        while (true) {
+            System.out.print("Enter the origin base (2,8,10,16) or STOP: ");
+            String baseInput = scanner.nextLine().trim();
+            if (baseInput.equals("STOP")) break;
+
+            int originBase;
+            try {
+                originBase = Integer.parseInt(baseInput);
+                if (!(originBase == 2 || originBase == 8 || originBase == 10 || originBase == 16)) {
+                    
