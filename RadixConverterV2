@@ -1,0 +1,143 @@
+package com.mycompany.whatistheoutput;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class WhatIsTheOutput {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        // List to store results for later printing
+        List<String[]> results = new ArrayList<>();
+
+        while (true) {
+            // Ask user for a number
+            System.out.print("\nEnter the number (or type 'STOP' to exit): ");
+            String number = scanner.nextLine();
+            if (checkForStop(number)) {
+                break;  // Break the loop if user types "STOP"
+            }
+
+            // Determine the base based on the input format
+            int base = determineBase(number);
+            if (base == -1) {
+                System.out.println("Invalid number format. Please enter a valid number.");
+                continue;
+            }
+
+            // Check if the number is valid for the detected base
+            if (!isValidNumberForBase(number, base)) {
+                System.out.println("Invalid number for base " + base + ". Please enter a valid number.");
+                continue;
+            }
+
+            // Convert number to decimal
+            int decimalNumber = DecimalNumberConverter(number, base);
+
+            // Prepare result list dynamically
+            List<String> row = new ArrayList<>();
+            row.add(number); // Always add the original input
+
+            // Add output based on the detected base
+            row.add(RadixNumberConverter(decimalNumber, 2));   // Binary
+            row.add(RadixNumberConverter(decimalNumber, 8));   // Octal
+            row.add(String.valueOf(decimalNumber));             // Decimal
+            row.add(RadixNumberConverter(decimalNumber, 16));  // Hexadecimal
+
+            results.add(row.toArray(new String[0]));
+        }
+
+        // After STOP, print all the results collected
+        System.out.printf("%-25s%-25s%-25s%-25s%-25s\n", "Input", "Binary", "Octal", "Decimal", "Hexadecimal");
+        for (String[] result : results) {
+            // Print only up to 5 columns (input + 4 outputs max)
+            for (int i = 0; i < 5; i++) {
+                if (i < result.length) {
+                    System.out.printf("%-25s", result[i]);
+                } else {
+                    System.out.printf("%-25s", ""); // Empty if fewer outputs
+                }
+            }
+            System.out.println();
+        }
+
+        // Close the scanner
+        scanner.close();
+    }
+
+    // Checks if the user wants to stop
+    public static boolean checkForStop(String userType) {
+        return userType.equalsIgnoreCase("STOP");
+    }
+
+    // Determines the base of the input number
+    public static int determineBase(String number) {
+        if (number.startsWith("0b") || number.startsWith("0B")) {
+            return 2; // Binary
+        } else if (number.startsWith("0x") || number.startsWith("0X")) {
+            return 16; // Hexadecimal
+        } else if (number.startsWith("0") && number.length() > 1) {
+            return 8; // Octal (leading zero, but not just "0")
+        } else {
+            return 10; // Decimal (default)
+        }
+    }
+
+    // Checks if the number is valid for the detected base
+    public static boolean isValidNumberForBase(String number, int base) {
+        // Remove the base prefix if it exists
+        if (number.startsWith("0b") || number.startsWith("0B")) {
+            number = number.substring(2);
+        } else if (number.startsWith("0x") || number.startsWith("0X")) {
+            number = number.substring(2);
+        } else if (number.startsWith("0") && number.length() > 1) {
+            number = number.substring(1);  // Remove the leading "0" for octal
+        }
+
+        String validDigits = "0123456789ABCDEF";
+        number = number.toUpperCase();
+
+        for (char digit : number.toCharArray()) {
+            int digitValue = validDigits.indexOf(digit);
+            if (digitValue == -1 || digitValue >= base) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Converts a number from any base to decimal
+    public static int DecimalNumberConverter(String number, int base) {
+        int decimalNumber = 0;
+        int digitConv;
+
+        for (int i = number.length() - 1, power = 0; i >= 0; i--, power++) {
+            char currentDigit = number.charAt(i);
+            int value;
+            if (currentDigit >= 'A' && currentDigit <= 'F') {
+                value = 10 + (currentDigit - 'A');
+            } else {
+                value = Character.getNumericValue(currentDigit);
+            }
+            digitConv = (int) Math.pow(base, power) * value;
+            decimalNumber += digitConv;
+        }
+        return decimalNumber;
+    }
+
+    // Converts a decimal number to any other base (binary, octal, hexadecimal)
+    public static String RadixNumberConverter(int decimalNumber, int baseNumber) {
+        if (decimalNumber == 0) return "0";
+        String finalAnswer = "";
+        while (decimalNumber > 0) {
+            int remainder = decimalNumber % baseNumber;
+            if (remainder >= 10) {
+                finalAnswer = (char) ('A' + (remainder - 10)) + finalAnswer;
+            } else {
+                finalAnswer = remainder + finalAnswer;
+            }
+            decimalNumber /= baseNumber;
+        }
+        return finalAnswer;
+    }
+}
