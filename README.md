@@ -1,1 +1,1 @@
-Lol CC1 go brrrt
+Radix ni Kyro, Radix ni Justin, Radix ni Rei
