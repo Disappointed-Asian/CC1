@@ -1,6 +1,6 @@
 /*package com.mycompany.kyrocalculator;
 *change kyrocalculator to the name of your package
-*usually the name of your file but all letters are lowercase
+*usually it's the name of your file but all letters are lowercase
 */Delete this comment if not needed
 
 import java.util.*;
