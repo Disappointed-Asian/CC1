@@ -1,87 +1,158 @@
-package com.mycompany.radixnikyro;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.alcuizarradixconverter11;
+
+/*
+ *
+ * @author M304User
+ */
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class RadixniKyro {
+public class AlcuizarRadixConverter11 {
 
-    private static final List<String> VALID_BASES =
-            List.of("2","3","4","5","6","7","8","9","10","11","12","13","14","15","16");
+    private static String toBase(BigInteger number, int base) {
+        return number.toString(base).toUpperCase();
+    }
+
+    private static BigInteger fromBase(String numberStr, int base) throws NumberFormatException {
+        return new BigInteger(numberStr, base);
+    }
+
+    // Converts base integer to subscript string (only digits used in 2,8,10,16)
+    private static String toSubscript(int base) {
+        StringBuilder subscript = new StringBuilder();
+        for (char digit : String.valueOf(base).toCharArray()) {
+            switch (digit) {
+                case '0': subscript.append("₀"); break;
+                case '1': subscript.append("₁"); break;
+                case '2': subscript.append("₂"); break;
+                case '6': subscript.append("₆"); break;
+                case '8': subscript.append("₈"); break;
+            }
+        }
+        return subscript.toString();
+    }
+
+    // Formats a value with its base in subscript notation (always show base)
+    private static String formatWithBase(String value, int base) {
+        return "(" + value + ")" + toSubscript(base);
+    }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
+        System.out.println("Number System Converter (Bases 2, 8, 10, 16)");
+        System.out.println("Type STOP at any prompt to quit.\n");
+
+        int[] allowedBases = {2, 8, 10, 16};
+        String[] headers = {"Input", "Output 1", "Output 2", "Output 3"};
+
+        List<String[]> rows = new ArrayList<>();
+
         while (true) {
-            // --- Ask for source base ---
-            System.out.print("\nEnter the base (2 – 16) or STOP: ");
+            System.out.print("Enter the origin number system (2, 8, 10, 16): ");
             String baseInput = scanner.nextLine().trim();
-            if (isStop(baseInput)) break;
 
-            if (!VALID_BASES.contains(baseInput)) {
-                System.out.println("Invalid base. Please type a number between 2 and 16.");
+            if (baseInput.equalsIgnoreCase("STOP")) {
+                System.out.println("Exiting the converter. Goodbye!");
+                break;
+            }
+
+            int baseFrom;
+            try {
+                baseFrom = Integer.parseInt(baseInput);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter one of the following bases: 2, 8, 10, or 16.");
                 continue;
             }
-            int base = Integer.parseInt(baseInput);
 
-            // --- Ask for number in that base ---
-            System.out.print("Enter a number in base " + base + " (or STOP): ");
-            String number = scanner.nextLine().trim();
-            if (isStop(number)) break;
-
-            if (number.equalsIgnoreCase("0")) {
-                // Print zero in all bases
-                for (int b = 2; b <= 16; b++) {
-                    System.out.println("Base " + b + ": 0");
+            boolean validBase = false;
+            for (int b : allowedBases) {
+                if (b == baseFrom) {
+                    validBase = true;
+                    break;
                 }
+            }
+
+            if (!validBase) {
+                System.out.println("Base must be one of the following: 2, 8, 10, or 16.");
                 continue;
             }
 
-            if (!isValidForBase(number, base)) {
-                System.out.println("Invalid number for base " + base + ".");
+            System.out.print("Enter the number in base " + baseFrom + ": ");
+            String numberInput = scanner.nextLine().trim();
+
+            if (numberInput.equalsIgnoreCase("STOP")) {
+                System.out.println("Exiting the converter. Goodbye!");
+                break;
+            }
+
+            BigInteger decimalValue;
+            try {
+                decimalValue = fromBase(numberInput, baseFrom);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number '" + numberInput + "' for base " + baseFrom + ". Please try again.");
                 continue;
             }
 
-            // --- Convert to decimal ---
-            int decimalValue = toDecimal(number, base);
-
-            // --- Convert decimal to every base 2–16 ---
-            for (int targetBase = 2; targetBase <= 16; targetBase++) {
-                System.out.println("Base " + targetBase + ": " + fromDecimal(decimalValue, targetBase));
+            // Order bases for display: input base first, then others
+            int[] basesOrdered = new int[4];
+            basesOrdered[0] = baseFrom;
+            int idx = 1;
+            for (int b : allowedBases) {
+                if (b != baseFrom) {
+                    basesOrdered[idx++] = b;
+                }
             }
+
+            // Prepare values with proper base formatting
+            String[] values = new String[4];
+            values[0] = formatWithBase(numberInput.toUpperCase(), basesOrdered[0]);
+            for (int i = 1; i < 4; i++) {
+                values[i] = formatWithBase(toBase(decimalValue, basesOrdered[i]), basesOrdered[i]);
+            }
+
+            rows.add(values);
+
+            // Calculate max column widths
+            int[] maxColWidths = new int[4];
+            for (int i = 0; i < 4; i++) {
+                maxColWidths[i] = headers[i].length();
+            }
+            for (String[] row : rows) {
+                for (int i = 0; i < 4; i++) {
+                    if (row[i].length() > maxColWidths[i]) {
+                        maxColWidths[i] = row[i].length();
+                    }
+                }
+            }
+
+            // Add a big blank space to clear clutter before printing the table
+            for (int i = 0; i < 80; i++) {
+                System.out.println();
+            }
+
+            // Print table
+            printRow(headers, maxColWidths);
+            System.out.println();
+            for (String[] row : rows) {
+                printRow(row, maxColWidths);
+            }
+            System.out.println();
         }
+
         scanner.close();
     }
 
-    private static boolean isStop(String text) {
-        return text.equalsIgnoreCase("STOP");
-    }
-
-    // Check that all digits are valid for the given base
-    private static boolean isValidForBase(String number, int base) {
-        for (char c : number.toUpperCase().toCharArray()) {
-            if (Character.digit(c, base) == -1) {
-                return false;
-            }
+    private static void printRow(String[] columns, int[] colWidths) {
+        for (int i = 0; i < columns.length; i++) {
+            System.out.printf("%-" + (colWidths[i] + 2) + "s", columns[i]);
         }
-        return true;
-    }
-
-    // Convert any base-N number to decimal
-    private static int toDecimal(String number, int base) {
-        int value = 0;
-        for (char c : number.toUpperCase().toCharArray()) {
-            value = value * base + Character.digit(c, base);
-        }
-        return value;
-    }
-
-    // Convert a decimal number to a string in the target base
-    private static String fromDecimal(int decimal, int base) {
-        StringBuilder sb = new StringBuilder();
-        int num = decimal;
-        while (num > 0) {
-            sb.insert(0,Character.toUpperCase(Character.forDigit(num % base, base)));
-            num /= base;
-        }
-        return sb.toString();
+        System.out.println();
     }
 }
