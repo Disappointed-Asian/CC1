@@ -143,4 +143,71 @@ public class Radix {
             try {
                 originBase = Integer.parseInt(baseInput);
                 if (!(originBase == 2 || originBase == 8 || originBase == 10 || originBase == 16)) {
-                    
+                    System.out.println("Only bases 2, 8, 10, and 16 are supported.");
+                    continue;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid base input.");
+                continue;
+            }
+
+            System.out.print("Enter the number in base " + originBase + ": ");
+            String numberInput = scanner.nextLine().trim();
+            if (numberInput.equals("STOP")) break;
+
+            double decimalValue;
+            try {
+                decimalValue = parseInput(numberInput, originBase);
+            } catch (Exception e) {
+                System.out.println("Invalid number format: " + e.getMessage());
+                continue;
+            }
+
+            String inBase = "(" + numberInput + ")" + baseSubscript(originBase);
+
+            String out1 = "", out2 = "", out3 = "";
+            if (originBase == 2) {
+                out1 = "(" + convertToBase(decimalValue, 8) + ")" + baseSubscript(8);
+                out2 = "(" + convertToBase(decimalValue, 10) + ")" + baseSubscript(10);
+                out3 = "(" + convertToBase(decimalValue, 16) + ")" + baseSubscript(16);
+            } else if (originBase == 8) {
+                out1 = "(" + convertToBase(decimalValue, 2) + ")" + baseSubscript(2);
+                out2 = "(" + convertToBase(decimalValue, 10) + ")" + baseSubscript(10);
+                out3 = "(" + convertToBase(decimalValue, 16) + ")" + baseSubscript(16);
+            } else if (originBase == 10) {
+                out1 = "(" + convertToBase(decimalValue, 2) + ")" + baseSubscript(2);
+                out2 = "(" + convertToBase(decimalValue, 8) + ")" + baseSubscript(8);
+                out3 = "(" + convertToBase(decimalValue, 16) + ")" + baseSubscript(16);
+            } else if (originBase == 16) {
+                out1 = "(" + convertToBase(decimalValue, 2) + ")" + baseSubscript(2);
+                out2 = "(" + convertToBase(decimalValue, 8) + ")" + baseSubscript(8);
+                out3 = "(" + convertToBase(decimalValue, 10) + ")" + baseSubscript(10);
+            }
+
+            results.add(new String[]{inBase, out1, out2, out3});
+
+            // --- column widths ---
+            int[] colWidths = new int[4];
+            for (String[] row : results) {
+                for (int i = 0; i < 4; i++) {
+                    colWidths[i] = Math.max(colWidths[i], row[i].length());
+                }
+            }
+
+            // --- print full history ---
+            System.out.println();
+            System.out.printf("%-" + (colWidths[0] + 8) + "s%-" + (colWidths[1] + 8) + "s%-" + (colWidths[2] + 8) + "s%-" + (colWidths[3] + 8) + "s%n",
+                    "Input", "Output 1", "Output 2", "Output 3");
+
+            for (String[] row : results) {
+                for (int i = 0; i < 4; i++) {
+                    System.out.printf("%-" + (colWidths[i] + 8) + "s", row[i]);
+                }
+                System.out.println();
+            }
+            System.out.println();
+        }
+
+        scanner.close();
+    }
+}
