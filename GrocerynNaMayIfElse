@@ -1,0 +1,46 @@
+import java.util.Scanner;
+
+public class GroceryDiscountCalculatorIfElse { 
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("===================================================");
+        
+        // Final or total amount of purchase
+        System.out.print("Enter the total amount purchase amount (PHP): ");
+        double totalAmount = scanner.nextDouble();
+        
+        double discountPercent = 0;
+        double discountAmount = 0;
+        double finalPrice = totalAmount;
+        
+        // Applying discounts basing on the total amount using if-else
+        if (totalAmount < 1000) {
+            discountPercent = 0;
+        } else if (totalAmount >= 1000 && totalAmount <= 5000) {
+            discountPercent = 5;
+        } else if (totalAmount >= 5001 && totalAmount <= 10000) {
+            discountPercent = 10;
+        } else if (totalAmount > 10000) {
+            discountPercent = 15;
+        } else {
+            discountPercent = 0;
+        }
+
+        // This calculate the discount amount and showing its final price
+        discountAmount = totalAmount * discountPercent / 100;
+        finalPrice = totalAmount - discountAmount;
+  
+        // This is where the results is displayed
+        System.out.println("Discount applied: " + discountPercent + "%");
+        System.out.println("Final price after discount: PHP " + String.format("%.2f", finalPrice));
+
+        System.out.println("===================================================");
+
+        // Extra lang po haha
+        System.out.println("Thank you ha hehe");
+        System.out.print("===================================================");
+
+        scanner.close();
+    }
+}
