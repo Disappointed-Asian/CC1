@@ -4,35 +4,48 @@ import java.util.Scanner;
 
 public class MyGroceryCalcuator {
 
-    public static void main(String[] args) {
+   public static void main(String[] args) {
         //creates scanner
         Scanner scanner = new Scanner(System.in);
         
         //asks for total purchase amount
-        System.out.println("\nEnter the total purchase amount: ");
-        double amount = scanner.nextInt();
+        System.out.print("\nEnter the total purchase amount: ");
+        
+        try {
+        
+        double amount = scanner.nextInt();    
+        double discount;
         double finalAmount;
         
-        //computes discounts
+        //determines discount depending on price
         if (amount < 1000) {
-            System.out.println("Discount applied: No discount applied.");
-            System.out.println("Final price after discount: PHP " + amount);
+            discount = 0;
         }
-        else if (amount > 1000 && amount <= 5000){
-            finalAmount = amount - (amount * 0.05); 
-            System.out.println("Discount applied: 5%");
-            System.out.println("Final price after discount: PHP " + finalAmount);
+        else if (amount >= 1000 && amount < 5000){
+            discount = 5;
         }
-        else if (amount > 5000 && amount <= 10000){
-            finalAmount = amount - (amount * 0.1); 
-            System.out.println("Discount applied: 10%");
-            System.out.println("Final price after discount: PHP " + finalAmount);
+        else if (amount >= 5000 && amount < 10000){ 
+            discount = 10;
         }
         else{
-            finalAmount = amount - (amount * 0.15); 
-            System.out.println("Discount applied: 15%");
-            System.out.println("Final price after discount: PHP " + finalAmount);
+            discount = 15;
         }
+        
+        //computes discounts
+        finalAmount = amount - (amount * (discount/100)); 
+        
+        //prints output
+        System.out.println("\n==============================================");
+        System.out.println("Discount applied: " + discount + "%.");
+        System.out.println("Final price after discount: PHP " + finalAmount);
+        System.out.println("==============================================");
+        }
+        
+        //catches invalid input
+        catch (InputMismatchException e){
+            System.out.println("\n--------Invalid Input--------\n");
+        }
+        
         scanner.close();
     }
 }
