@@ -1,0 +1,39 @@
+package mygrocerycalcuator;
+
+import java.util.Scanner;
+
+public class MyGroceryCalcuator {
+
+    public static void main(String[] args) {
+        // Create Scanner
+        Scanner scanner = new Scanner(System.in);
+
+        // Ask for total purchase amount
+        System.out.print("Enter the total purchase amount: PHP ");
+        double amount = scanner.nextDouble();   // allow decimals
+        double finalAmount;
+
+        // Compute discounts
+        if (amount < 1000) {
+            System.out.println("Discount applied: No discount applied.");
+            System.out.printf("Final price after discount: PHP %.2f%n", amount);
+        }
+        else if (amount >= 1000 && amount <= 5000) {
+            finalAmount = amount - (amount * 0.05);
+            System.out.println("Discount applied: 5%");
+            System.out.printf("Final price after discount: PHP %.2f%n", finalAmount);
+        }
+        else if (amount > 5000 && amount <= 10000) {
+            finalAmount = amount - (amount * 0.10);
+            System.out.println("Discount applied: 10%");
+            System.out.printf("Final price after discount: PHP %.2f%n", finalAmount);
+        }
+        else {
+            finalAmount = amount - (amount * 0.15);
+            System.out.println("Discount applied: 15%");
+            System.out.printf("Final price after discount: PHP %.2f%n", finalAmount);
+        }
+
+        scanner.close();
+    }
+}
