@@ -1,0 +1,61 @@
+import java.util.*;
+
+public class Aben_LabChall5{
+
+    public static void main(String[] args) {
+        try{
+            Scanner scanner = new Scanner(System.in);
+            //displays the menu
+            System.out.println("\n\n============================================");
+            System.out.println("1. Burger \t\t PHP 100");
+            System.out.println("2. Soda \t\t PHP 50");
+            System.out.println("3. Fries \t\t PHP 30");
+            System.out.println("4. Ice Cream \t\t PHP 45");
+            System.out.println("5. Exit");
+            System.out.println("============================================");
+            
+            //asks user to input order
+            System.out.print("\nEnter the menu number of your choice: ");
+            int orderNumber = scanner.nextInt();
+            
+            //checks if user inputs a valid number
+            if (orderNumber <= 0 || orderNumber > 5){
+                System.out.println("\nPlease enter a number between 1 and 5.\n");
+                System.exit(0);
+            }
+            
+            String order = "";
+            double price = 0;
+            
+            //assigns the order and price depending on the user's choice
+            switch (orderNumber){
+                case 1: order = "Burger"; price = 100; break;
+                case 2: order = "Soda"; price = 50; break;
+                case 3: order = "Fries"; price = 30; break;
+                case 4: order = "Ice Cream"; price = 45; break;
+                case 5: 
+                    System.out.println("\n--------THANK YOU FOR ORDERING-------\n");
+                    System.exit(0); 
+            }
+            
+            //asks the user to enter the quantity of the order
+            System.out.print("Enter the quantity: ");
+            int quantity = scanner.nextInt();
+            
+            //calculates the final price of the order
+            double finalPrice = price * quantity;
+            
+            //displays the final result
+            System.out.println("\nYou ordered " + order + "!");
+            System.out.println("Total Amount: PHP " + finalPrice);
+            System.out.println("\n-----------THANK YOU FOR ORDERING----------\n");
+            System.out.println("============================================");
+            
+            scanner.close();
+        }
+        //checks if user inputs anything other than a number
+        catch (InputMismatchException e){
+            System.out.println("\nPlease enter a number.\n");
+        }
+    }
+}
