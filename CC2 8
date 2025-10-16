@@ -1,0 +1,35 @@
+package enrollment.payroll.system;
+
+public class EnrollmentPayrollSystem {
+    public static void main(String[] args) {
+        Employee Justin = new Employee("25-0147-879", "Justin", 50, 160);
+        System.out.println("Employee 1:");
+        System.out.println(Employee.displayEmployeeDetails());
+    }
+    
+}
+
+class Employee{
+    String employeeID;
+    String name;
+    double hourlyWage;
+    double hoursWorked;
+    
+    Employee(String employeeID, String name, double hourlyWage, double hoursWorked){
+        this.employeeID = employeeID;
+        this.name = name;
+        this.hourlyWage = hourlyWage;
+        this.hoursWorked = hoursWorked;
+    }
+    
+    double calculateSalary(double hourlyWage, double hoursWorked){
+        return hourlyWage * hoursWorked;
+    }
+    
+    String displayEmployeeDetails(){
+        return "ID: " + employeeID + 
+               "\nName: " + name + 
+               "\nHpurly Wage: " + hourlyWage + 
+               "\nHours Worked: " + hoursWorked;
+    }
+}
