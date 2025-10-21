@@ -1,4 +1,4 @@
-public class EpmployeePayrollSystem {
+public class EmployeePayrollSystem {
     public static void main(String[] args) {
         //Creating Employee objects and print employee details
         System.out.println("=============================================");
