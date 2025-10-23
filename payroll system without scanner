@@ -1,0 +1,46 @@
+package com.mycompany.employeepayrollwithoutuser;
+import java.util.*;
+
+class Employee {
+    // Attributes
+    String employeeID;
+    String name;
+    double hourlyWage;
+    double hoursWorked;
+
+    // Constructor
+    public Employee(String employeeID, String name, double hourlyWage, double hoursWorked) {
+        this.employeeID = employeeID;
+        this.name = name;
+        this.hourlyWage = hourlyWage;
+        this.hoursWorked = hoursWorked;
+    }
+
+    // Method to calculate monthly salary
+    public double calculateSalary() {
+        return hourlyWage * hoursWorked;
+    }
+
+    // Method to display employee details
+    public void displayEmployeeDetails() {
+        double salary = calculateSalary();
+        System.out.println("ID: " + employeeID + ", Name: " + name + 
+                           ", Wage: " + hourlyWage + ", Hours Worked: " + hoursWorked + 
+                           ", Salary: " + salary);
+    }
+}
+
+public class Employeepayrollwithoutuser {
+    public static void main(String[] args) {
+        // Create multiple Employee objects
+        Employee emp1 = new Employee("E001", "Alice Gou", 15, 160);
+        Employee emp2 = new Employee("E002", "Kiko Barzaga", 18, 150);
+
+        System.out.println("Calculating salaries...");
+        System.out.println("\nEmployee Details:");
+        
+        // Display employee details
+        emp1.displayEmployeeDetails();
+        emp2.displayEmployeeDetails();
+    }
+}
